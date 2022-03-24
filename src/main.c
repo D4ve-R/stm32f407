@@ -34,37 +34,41 @@ void delay(void){
 	for(volatile ui32 i = 0; i < 500000; i++);
 }
 
-void GpioOutputPinFactory(GPIO_Handle_t *GpioLed, uint8_t pinNumber){
-	GpioLed->pGPIOx = GPIOD;
-	GpioLed->GPIO_PinConfig.GPIO_PinNumber = pinNumber;
-	GpioLed->GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_OUT;
-	GpioLed->GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_LOW;
-	GpioLed->GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_PP;
-	GpioLed->GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PUPD;
+void GpioOutputPinFactory(GPIO_Handle_t *pGPIOHandle, uint8_t pinNumber){
+	pGPIOHandle->pGPIOx = GPIOD;
+	pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber = pinNumber;
+	pGPIOHandle->GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_OUT;
+	pGPIOHandle->GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_LOW;
+	pGPIOHandle->GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_PP;
+	pGPIOHandle->GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PUPD;
+	GPIO_Init(pGPIOHandle);
+}
+
+GPIO_Handle_t LedBlue, LedRed, LedOrange, LedGreen;
+
+void initLeds(){
+	GPIO_PeriClockControl(RCC_PORTD, ENABLE);
+	GPIO_OutputPinFactory(&LedRed, GPIO_PIN_NO_14);
+	GPIO_OutputPinFactory(&LedBlue, GPIO_PIN_NO_15);
+	GPIO_OutputPinFactory(&LedGreen, GPIO_PIN_NO_12);
+	GPIO_OutputPinFactory(&LedOrange, GPIO_PIN_NO_13);
+}
+
+void toggleLeds(){
+	GPIO_ToggleOutputPin(GPIOD, GPIO_PIN_NO_15);
+	GPIO_ToggleOutputPin(GPIOD, GPIO_PIN_NO_12);
+
+	delay();
+
+	GPIO_ToggleOutputPin(GPIOD, GPIO_PIN_NO_14);
+	GPIO_ToggleOutputPin(GPIOD, GPIO_PIN_NO_13);
 }
 
 int main(void)
 {
-	//*((volatile ui32*) (RCC_ENABLE_PORTD)) |= (1 << 3);		//enable rcc on port d
-	GPIO_PeriClockControl(RCC_PORTD, ENABLE);
-	GPIO_Handle_t LedBlue, LedRed, LedOrange, LedGreen;
-	GpioOutputPinFactory(&LedRed, GPIO_PIN_NO_14);
-	GpioOutputPinFactory(&LedBlue, GPIO_PIN_NO_15);
-	GpioOutputPinFactory(&LedGreen, GPIO_PIN_NO_12);
-	GpioOutputPinFactory(&LedOrange, GPIO_PIN_NO_13);
-
-	GPIO_Init(&LedBlue);
-	GPIO_Init(&LedRed);
-	GPIO_Init(&LedGreen);
-	GPIO_Init(&LedOrange);
+	initLeds();
 
     while(1){
-    	GPIO_ToggleOutputPin(GPIOD, GPIO_PIN_NO_15);
-    	GPIO_ToggleOutputPin(GPIOD, GPIO_PIN_NO_12);
-
-    	delay();
-
-    	GPIO_ToggleOutputPin(GPIOD, GPIO_PIN_NO_14);
-    	GPIO_ToggleOutputPin(GPIOD, GPIO_PIN_NO_13);
+    	toggleLeds();
     }
 }

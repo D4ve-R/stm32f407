@@ -28,7 +28,16 @@ typedef struct {
 }EXTI_RegDef_t;
 
 typedef struct {
+	uint8_t EXTI_LineNumber;			/* EXTIx [0 -  ? 5 ?] */	//need to check manual
+	uint8_t EXTI_RisingTrigger;			/* ENABLE || DISABLE */
+	uint8_t EXTI_FallingTrigger;		/* ENABLE || DISABLE */
+	uint8_t EXTI_InterruptMask;			/* ENABLE || DISABLE */
+	uint8_t EXTI_EventMask;				/* ENABLE || DISABLE */
+}EXTI_Config_t;
+
+typedef struct {
 	EXTI_RegDef_t *pEXTI;
+	EXTI_Config_t EXTI_Config;
 }EXTI_Handle_t;
 
 void EXTI_ConfigFallingTrigger(uint8_t lineNumber, uint8_t mode);
