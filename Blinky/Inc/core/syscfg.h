@@ -28,10 +28,13 @@ typedef struct {
 	volatile uint32_t CMPCR;			/* Address offset: 0x18 */
 }SYSCFG_RegDef_t;
 
+
+
 typedef struct {
 	SYSCFG_RegDef_t *pSYSCFG;
 }SYSCFG_Handle_t;
 
 void SYSCFG_ConfigExti(uint8_t extiNumber, uint8_t extiConfig);
+void SYSCFG_Init(uint8_t extiNumber);
 
 #endif /* SYSCFG_H_ */

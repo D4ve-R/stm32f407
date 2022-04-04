@@ -1,6 +1,7 @@
 /*
  * rcc.h
  *
+ *  Created on: 23.03.2022
  *      Author: davidrechkemmer
  */
 
@@ -41,28 +42,24 @@ typedef struct {
 	uint32_t RESERVED0;					/* Address offset: 0x1C */
 	volatile uint32_t APB1RSTR;			/* Address offset: 0x20 */
 	volatile uint32_t APB2RSTR;			/* Address offset: 0x24 */
-	uint32_t RESERVED1;					/* Address offset: 0x28 */
-	uint32_t RESERVED2;					/* Address offset: 0x2C */
+	uint32_t RESERVED1[2];				/* Address offset: 0x28 - 0x2C */
 	volatile uint32_t AHB1ENR;			/* Address offset: 0x30 */
 	volatile uint32_t AHB2ENR;			/* Address offset: 0x34 */
 	volatile uint32_t AHB3ENR;			/* Address offset: 0x38 */
-	uint32_t RESERVED3;					/* Address offset: 0x3C */
+	uint32_t RESERVED2;					/* Address offset: 0x3C */
 	volatile uint32_t APB1ENR;			/* Address offset: 0x40 */
 	volatile uint32_t APB2ENR;			/* Address offset: 0x44 */
-	uint32_t RESERVED4;					/* Address offset: 0x48 */
-	uint32_t RESERVED5;					/* Address offset: 0x4C */
+	uint32_t RESERVED3[2];				/* Address offset: 0x48 - 0x4C */
 	volatile uint32_t AHB1LP_ENR;		/* Address offset: 0x50 */
 	volatile uint32_t AHB2LP_ENR;		/* Address offset: 0x54 */
 	volatile uint32_t AHB3LP_ENR;		/* Address offset: 0x58 */
-	uint32_t RESERVED6;					/* Address offset: 0x5C */
+	uint32_t RESERVED4;					/* Address offset: 0x5C */
 	volatile uint32_t APB1LP_ENR;		/* Address offset: 0x60 */
 	volatile uint32_t APB2LP_ENR;		/* Address offset: 0x64 */
-	uint32_t RESERVED7;					/* Address offset: 0x68 */
-	uint32_t RESERVED8;					/* Address offset: 0x6C */
+	uint32_t RESERVED5[2];				/* Address offset: 0x68 - 0x6C */
 	volatile uint32_t BDCR;				/* Address offset: 0x70 */
 	volatile uint32_t CSR;				/* Address offset: 0x74 */
-	uint32_t RESERVED9;					/* Address offset: 0x78 */
-	uint32_t RESERVED10;				/* Address offset: 0x7C */
+	uint32_t RESERVED6[2];				/* Address offset: 0x78 - 0x7C */
 	volatile uint32_t SSCGR;			/* Address offset: 0x80 */
 	volatile uint32_t PLLI2SCFGR;		/* Address offset: 0x84 */
 }RCC_RegDef_t;
@@ -74,6 +71,6 @@ typedef struct {
 void RCC_EnableAHB1(uint8_t port);
 void RCC_DisableAHB1(uint8_t port);
 void RCC_EnableAPB2(uint8_t port);
-void RCC_DisableAPB2();
+void RCC_DisableAPB2(uint8_t port);
 
 #endif /* RCC_H_ */

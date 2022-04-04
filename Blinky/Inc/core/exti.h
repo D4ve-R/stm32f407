@@ -1,6 +1,7 @@
 /*
  * exti.h
  *
+ *  Created on: 24.03.2022
  *      Author: davidrechkemmer
  */
 
@@ -8,10 +9,11 @@
 #define EXTI_H_
 
 #include <stdint.h>
-#include <common.h>
+#include "common.h"
+#include "nvic.h"
 
 #ifndef APB2_BASEADDR
-#define APB2_BASEADDR		0x4001000U
+#define APB2_BASEADDR		0x40010000U
 #endif
 
 #define EXTI_BASEADDR		(APB2_BASEADDR + 0x3C00U)
@@ -28,7 +30,7 @@ typedef struct {
 }EXTI_RegDef_t;
 
 typedef struct {
-	uint8_t EXTI_LineNumber;			/* EXTIx [0 -  ? 5 ?] */	//need to check manual
+	uint8_t EXTI_LineNumber;			/* EXTIx [0 - ? 5 ?] */	//need to check manual
 	uint8_t EXTI_RisingTrigger;			/* ENABLE || DISABLE */
 	uint8_t EXTI_FallingTrigger;		/* ENABLE || DISABLE */
 	uint8_t EXTI_InterruptMask;			/* ENABLE || DISABLE */
@@ -40,7 +42,7 @@ typedef struct {
 	EXTI_Config_t EXTI_Config;
 }EXTI_Handle_t;
 
-void EXTI_ConfigFallingTrigger(uint8_t lineNumber, uint8_t mode);
-void EXTI_ConfigInterruptMask(uint8_t lineNumber, uint8_t mode);
+
+void EXTI_Init(EXTI_Handle_t *pEXTI_Handle);
 
 #endif /* EXTI_H_ */

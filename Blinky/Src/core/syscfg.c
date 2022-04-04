@@ -5,8 +5,13 @@
  *      Author: davidrechkemmer
  */
 
-#include <syscfg.h>
+#include "core/syscfg.h"
 
 void SYSCFG_ConfigExti(uint8_t extiNumber, uint8_t extiConfig){
 
+}
+void SYSCFG_Init(uint8_t extiLineNo){
+	if(extiLineNo <= 3){
+
+	}
 }

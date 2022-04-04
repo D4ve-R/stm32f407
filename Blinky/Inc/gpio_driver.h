@@ -11,12 +11,15 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "core/rcc.h"
+#include "core/exti.h"
+#include "common.h"
+
 
 #ifdef __cplusplus
-extern "C" {
+	extern "C" {
 #endif
 
-#include <common.h>
 
 #define GPIO_PIN_SET        SET
 #define GPIO_PIN_RESET      RESET
@@ -135,14 +138,17 @@ typedef struct
 
 void GPIO_Init(GPIO_Handle_t *pGPIOHandle);
 void GPIO_WriteToOutputPin(GPIO_Handle_t *pGPIO_Handle, uint8_t Value);
+void GPIO_ToggleOutputHandler(GPIO_Handle_t *pGPIO_Handle);
 void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint16_t pinNumber);
 
-#include "rcc.h"
+void GPIO_OutputPinFactory(GPIO_Handle_t *GpioLed, uint8_t pinNumber);
 
 void GPIO_PeriClockControl(uint8_t port, uint8_t mode);
 
+void GPIO_IRQHandling(uint8_t pinNumber);
+
 #ifdef __cplusplus
-}
+	}
 #endif
 
 #endif /* GPIO_DRIVER_H_ */

@@ -18,13 +18,9 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include "gpio_driver.h"
 
 #define ui32 uint32_t
-#define RCC_BASE 0x40023800U
-#define RCC_PORTD_OFFSET 0x30U
-#define RCC_ENABLE_PORTD RCC_BASE + RCC_PORTD_OFFSET
-
-#include "gpio_driver.h"
 
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
@@ -34,17 +30,7 @@ void delay(void){
 	for(volatile ui32 i = 0; i < 500000; i++);
 }
 
-void GpioOutputPinFactory(GPIO_Handle_t *pGPIOHandle, uint8_t pinNumber){
-	pGPIOHandle->pGPIOx = GPIOD;
-	pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber = pinNumber;
-	pGPIOHandle->GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_OUT;
-	pGPIOHandle->GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_LOW;
-	pGPIOHandle->GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_PP;
-	pGPIOHandle->GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PUPD;
-	GPIO_Init(pGPIOHandle);
-}
-
-GPIO_Handle_t LedBlue, LedRed, LedOrange, LedGreen;
+GPIO_Handle_t LedBlue, LedRed, LedOrange, LedGreen, Button;
 
 void initLeds(){
 	GPIO_PeriClockControl(RCC_PORTD, ENABLE);
@@ -55,20 +41,37 @@ void initLeds(){
 }
 
 void toggleLeds(){
-	GPIO_ToggleOutputPin(GPIOD, GPIO_PIN_NO_15);
-	GPIO_ToggleOutputPin(GPIOD, GPIO_PIN_NO_12);
-
+	GPIO_ToggleOutputHandler(&LedBlue);
+	GPIO_ToggleOutputHandler(&LedGreen);
 	delay();
-
-	GPIO_ToggleOutputPin(GPIOD, GPIO_PIN_NO_14);
-	GPIO_ToggleOutputPin(GPIOD, GPIO_PIN_NO_13);
+	GPIO_ToggleOutputHandler(&LedRed);
+	GPIO_ToggleOutputHandler(&LedOrange);
 }
+
+void initButton(){
+	Button.pGPIOx = GPIOA;
+	Button.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_0;
+	Button.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IT_FT;
+	Button.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PUPD;
+	GPIO_PeriClockControl(RCC_PORTA, ENABLE);
+	GPIO_Init(&Button);
+}
+
+uint8_t flag = 0;
 
 int main(void)
 {
 	initLeds();
+	initButton();
 
     while(1){
-    	toggleLeds();
+    	if(flag){
+    		toggleLeds();
+    	}
     }
+}
+
+void EXTI0_IRQHandler(void){
+	GPIO_IRQHandling(GPIO_PIN_NO_0);
+	flag  = !flag;
 }
